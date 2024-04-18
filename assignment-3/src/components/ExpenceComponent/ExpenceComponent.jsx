@@ -9,7 +9,7 @@ Expense title
 const ExpenceComponent = () => {
   const [userData, setUserData] = useState({
     expenseTitle: "",
-    lastName: "",
+    expenseAmount: "",
     email: "",
     phoneNumber: "",
     subject: "",
@@ -18,7 +18,7 @@ const ExpenceComponent = () => {
 
   const [errors, setErrors] = useState({
     expenseTitleError: "",
-    lastNameError: "",
+    expenceAmountError: "",
     emailError: "",
     phoneNumberError: "",
     subjectError: "",
@@ -35,10 +35,10 @@ const ExpenceComponent = () => {
       clonedErrors.expenseTitleError = "Maximum characters allowed is 20!";
     }
 
-    if (!userData.lastName.trim()) {
-      clonedErrors.lastNameError = "Last name is required!";
-    } else if (userData.lastName.length > 20) {
-      clonedErrors.lastNameError = "Maximum characters allowed is 20!";
+    if (!userData.expenseAmount.trim()) {
+      clonedErrors.expenseAmountError = "Last name is required!";
+    } else if (userData.expenseAmount.length > 20) {
+      clonedErrors.expenseAmountError = "Maximum characters allowed is 20!";
     }
 
     if (!userData.email.trim()) {
@@ -86,7 +86,9 @@ const ExpenceComponent = () => {
   return (
     <form className={styles.form_element} onSubmit={handleSubmit}>
       <fieldset className={styles.contact_form_container}>
-        <legend>Contact us</legend>
+
+        <legend>Expense Tracker! ☁️</legend>
+
         <section className={styles.name_section}>
           <div className={styles.input_group}>
             <label htmlFor="expenseTitle">
@@ -102,17 +104,17 @@ const ExpenceComponent = () => {
             <p>{errors.expenseTitleError}</p>
           </div>
           <div className={styles.input_group}>
-            <label htmlFor="lastName">
-              Last name<sup>*</sup>
+            <label htmlFor="expenseAmount">
+              Expense Amount<sup>*</sup>
             </label>
             <input
               type="text"
-              name="lastName"
-              placeholder="Enter your last name"
+              name="expenseAmount"
+              placeholder="Enter your expence amount"
               className={styles.input_element}
               onChange={handleChange}
             />
-            <p>{errors.lastNameError}</p>
+            <p>{errors.expenseAmountError}</p>
           </div>
         </section>
         <section className={styles.contact_section}>
@@ -174,7 +176,7 @@ const ExpenceComponent = () => {
 
 		<label for="quantity">Quantity:</label>
 				<input type="number" name="quantity" class="quantity" required></input>
-				
+
 		<label for="format"></label>
 				<select name="format" class="format" required>
 					<option value="housing">Housing</option>

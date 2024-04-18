@@ -7,7 +7,7 @@ function App() {
   return (
     <>
     <div className={styles.main_container}>
-      <h1>Hello!</h1>
+      <h1>Expense Tracker!</h1>
       <ExpenceComponent></ExpenceComponent>
       </div>
     </>
