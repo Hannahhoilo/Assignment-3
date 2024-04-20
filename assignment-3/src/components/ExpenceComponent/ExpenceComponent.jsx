@@ -10,7 +10,7 @@ const ExpenceComponent = () => {
   const [userData, setUserData] = useState({
     expenseTitle: "",
     expenseAmount: "",
-    email: "",
+    expenceDate: "",
     phoneNumber: "",
     subject: "",
     message: "",
@@ -19,7 +19,7 @@ const ExpenceComponent = () => {
   const [errors, setErrors] = useState({
     expenseTitleError: "",
     expenceAmountError: "",
-    emailError: "",
+    expenceDateError: "",
     phoneNumberError: "",
     subjectError: "",
     messageError: "",
@@ -41,8 +41,8 @@ const ExpenceComponent = () => {
       clonedErrors.expenseAmountError = "Maximum characters allowed is 20!";
     }
 
-    if (!userData.email.trim()) {
-      clonedErrors.emailError = "Email is required!";
+    if (!userData.expenceDate.trim()) {
+      clonedErrors.expenceDateError = "Expence Date is required!";
     }
 
     if (userData.phoneNumber.trim()) {
@@ -66,8 +66,9 @@ const ExpenceComponent = () => {
   const handleChange = (e) => {
     //e.preventDefault
     const { name, value } = e.target;
-    setErrors((prevErrors)=>({
-      ...prevErrors, [`${name}Error`]: "",
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [`${name}Error`]: "",
     }));
     setUserData((prev) => ({ ...prev, [name]: value }));
     if (name === "message" && value.length >= 300) {
@@ -86,7 +87,6 @@ const ExpenceComponent = () => {
   return (
     <form className={styles.form_element} onSubmit={handleSubmit}>
       <fieldset className={styles.contact_form_container}>
-
         <legend>Expense Tracker! ☁️</legend>
 
         <section className={styles.name_section}>
@@ -119,17 +119,17 @@ const ExpenceComponent = () => {
         </section>
         <section className={styles.contact_section}>
           <div className={styles.input_group}>
-            <label htmlFor="email">
-              Email<sup>*</sup>
+            <label htmlFor="expenceDate">
+              Expence Date<sup>*</sup>
             </label>
             <input
-              type="email"
-              name="email"
-              placeholder="Enter your email"
+              type="date"
+              name="expenceDate"
+              placeholder="Enter your Expence Date"
               className={styles.input_element}
               onChange={handleChange}
             />
-            <p>{errors.emailError}</p>
+            <p>{errors.expenceDateError}</p>
           </div>
           <div className={styles.input_group}>
             <label htmlFor="phoneNumber">Phone number</label>
@@ -143,6 +143,7 @@ const ExpenceComponent = () => {
             <p>{errors.phoneNumberError}</p>
           </div>
         </section>
+
         <div className={styles.input_group}>
           <label htmlFor="subject">Subject</label>
           <input
@@ -153,7 +154,25 @@ const ExpenceComponent = () => {
             onChange={handleChange}
           />
           <p>{errors.subjectError}</p>
+
+          <div className={styles.input_group}>
+            <label htmlFor="format">Type of expence</label>
+            <select
+              name="format"
+              class="format"
+              className={styles.input_element}
+              onChange={handleChange}
+              required
+            >
+              <option value="housing">Housing</option>
+              <option value="grocery">Grocery</option>
+              <option value="transportation">Transportation</option>
+              <option value="clothes">Clothes</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
         </div>
+
         <div className={styles.input_group}>
           <label htmlFor="message">
             Message<sup>*</sup>
@@ -170,23 +189,30 @@ const ExpenceComponent = () => {
           ></textarea>
           <div className={styles.message_error_and_count}>
             <p>{errors.messageError}</p>
-            <p>Message count: {textAreaElement.current ? textAreaElement.current.value.length: 0} / 300</p>
+            <p>
+              Message count:{" "}
+              {textAreaElement.current
+                ? textAreaElement.current.value.length
+                : 0}{" "}
+              / 300
+            </p>
           </div>
         </div>
 
-		<label for="quantity">Quantity:</label>
-				<input type="number" name="quantity" class="quantity" required></input>
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" class="quantity" required></input>
 
-		<label for="format"></label>
-				<select name="format" class="format" required>
-					<option value="housing">Housing</option>
-					<option value="grocery">Grocery</option>
-					<option value="transportation">Transportation</option>
-					<option value="clothes">Clothes</option>
-					<option value="other">Other</option>
-				</select>
+        <label for="format"></label>
+        <select name="format" class="format" required>
+          <option value="housing">Housing</option>
+          <option value="grocery">Grocery</option>
+          <option value="transportation">Transportation</option>
+          <option value="clothes">Clothes</option>
+          <option value="other">Other</option>
+        </select>
         <button className={styles.submit_button}>Submit</button>
       </fieldset>
+      <li>{}</li>
     </form>
   );
 };
