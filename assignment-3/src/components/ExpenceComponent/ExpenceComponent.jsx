@@ -4,7 +4,7 @@ import styles from "./ExpenceComponent.module.css";
 /*
 Expense title
  Expense amount
- Expense date */
+ Expense date <3 */
 
 const ExpenceComponent = () => {
   const [userData, setUserData] = useState({
