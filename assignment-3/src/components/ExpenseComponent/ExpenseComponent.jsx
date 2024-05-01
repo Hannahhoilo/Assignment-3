@@ -1,75 +1,124 @@
-import React, { useState, useRef } from "react";
-import styles from "./ExpenceComponent.module.css";
+import React, { useState, useRef, useEffect} from "react";
+import styles from "./ExpenseComponent.module.css";
 
-const ExpenceComponent = () => {
+//import RenderedExpenses from "../RenderedExpenses/RenderedExpenses";
+
+const ExpenseComponent = ({renderExpensesFromLocalStorage}) => {
   const [userData, setUserData] = useState({
     expenseTitle: "",
     expenseAmount: "",
-    expenceDate: "",
+    expenseDate: "",
     phoneNumber: "",
     subject: "",
     message: "",
+    format: "housing",
   });
 
   const [errors, setErrors] = useState({
     expenseTitleError: "",
     expenseAmountError: "",
-    expenceDateError: "",
+    expenseDateError: "",
     phoneNumberError: "",
     subjectError: "",
     messageError: "",
   });
 
+
   const [expenses, setExpenses] = useState([]);
 
   const textAreaElement = useRef(null);
 
-  const validateForm = () => {
-    const clonedErrors = { ...errors };
-    // Validation logic remains the same...
-    setErrors(clonedErrors);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      [`${name}Error`]: "",
-    }));
-    setUserData((prev) => ({ ...prev, [name]: value }));
-    if (name === "message" && value.length >= 300) {
-      setErrors((prev) => ({
-        ...prev,
-        messageErrors: "Maximum characters allowed is 300!",
-      }));
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    validateForm();
-    if (Object.values(errors).every((error) => !error)) {
+  useEffect(() => {
+    if (checkForNoErrors()) {
+      console.log("ok")
       const newExpense = {
         title: userData.expenseTitle,
         amount: userData.expenseAmount,
-        date: userData.expenceDate,
+        date: userData.expenseDate,
         phoneNumber: userData.phoneNumber,
         subject: userData.subject,
         message: userData.message,
       };
       setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
+      localStorage.setItem(userData.expenseTitle, JSON.stringify(userData));
+      renderExpensesFromLocalStorage();
       setUserData({
         expenseTitle: "",
         expenseAmount: "",
-        expenceDate: "",
+        expenseDate: "",
         phoneNumber: "",
         subject: "",
         message: "",
       });
+    };
+  }, [errors]);
+
+  const resetErrors = () => {
+    const newState = {};
+    for(const key in errors){
+      newState[key] = "";
     }
+    setErrors(newState);
+    console.log("reset")
+  }
+
+  const validateForm = () => {
+    setErrors((prevErrors) => {
+      // Validation logic remains the same...
+      const newErrors = { ...prevErrors };
+  
+      if (userData.expenseAmount === "") {
+        console.log("error");
+        newErrors.expenseAmountError = "Fill in amount";
+      }
+  
+      if (userData.expenseTitle === "") {
+        console.log("error");
+        newErrors.expenseTitleError = "Fill in title";
+      }
+  
+      if (!/^\d+$/.test(userData.phoneNumber)) {
+        console.log("error");
+        newErrors.phoneNumberError = "Only numbers";
+      }
+  
+      if (userData.message.length > 80) {
+        console.log("error");
+        newErrors.messageError = "Too long message";
+      }
+  
+      console.log("validated");
+      return newErrors;
+    });
   };
 
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+
+    setUserData((prev) => ({ ...prev, [name]: value }));
+
+  };
+
+  const checkForNoErrors = () => {
+    console.log("check")
+    for (const key in errors) {
+      if (errors[key] !== "") {
+        return false;
+      }
+    }
+    return true;
+  };
+  
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    validateForm();
+  };
+  
+
   return (
+	<>
     <div>
       <form className={styles.form_element} onSubmit={handleSubmit}>
         <fieldset className={styles.contact_form_container}>
@@ -77,7 +126,7 @@ const ExpenceComponent = () => {
 
           <div className={styles.input_group}>
             <label htmlFor="expenseTitle">
-              Expence title<sup>*</sup>
+              Expense title<sup>*</sup>
             </label>
             <input
               type="text"
@@ -106,18 +155,18 @@ const ExpenceComponent = () => {
           </div>
 
           <div className={styles.input_group}>
-            <label htmlFor="expenceDate">
+            <label htmlFor="expenseDate">
               Expense Date<sup>*</sup>
             </label>
             <input
               type="date"
-              name="expenceDate"
+              name="expenseDate"
               placeholder="Enter your Expense Date"
               className={styles.input_element}
-              value={userData.expenceDate}
+              value={userData.expenseDate}
               onChange={handleChange}
             />
-            <p>{errors.expenceDateError}</p>
+            <p>{errors.expenseDateError}</p>
           </div>
 
           <div className={styles.input_group}>
@@ -147,10 +196,10 @@ const ExpenceComponent = () => {
           </div>
 
           <div className={styles.input_group}>
-            <label htmlFor="format">Type of expence</label>
+            <label htmlFor="format">Type of expense</label>
             <select
               name="format"
-              class="format"
+              htmlFor="format"
               className={styles.input_element}
               onChange={handleChange}
               required
@@ -171,8 +220,8 @@ const ExpenceComponent = () => {
               name="message"
               cols="30"
               rows="10"
-              placeholder="Max characters 300"
-              maxLength={300}
+              placeholder="Max characters 80"
+              maxLength={80}
               className={styles.textarea_element}
               ref={textAreaElement}
               value={userData.message}
@@ -185,7 +234,7 @@ const ExpenceComponent = () => {
                 {textAreaElement.current
                   ? textAreaElement.current.value.length
                   : 0}{" "}
-                / 300
+                / 80
               </p>
             </div>
           </div>
@@ -193,27 +242,13 @@ const ExpenceComponent = () => {
           <button className={styles.submit_button}>Submit</button>
         </fieldset>
 
-        <div className={styles.rendered_expence_container}>
-          <h2>Rendered Expenses:</h2>
-          <ul>
-            {expenses.map((expense, index) => (
-              <li key={index}>
-                <h3>{expense.title}</h3>
-                <p>Amount: {expense.amount}</p>
-                <p>Date: {expense.date}</p>
-                <p>Phone number: {expense.phoneNumber}</p>
-                <p>Subject: {expense.subject}</p>
-                <p>Message: {expense.message}</p>
-                <p>Type of expence: {expense.format}</p>
-                
-                {/* Add more details here as needed */}
-              </li>
-            ))}
-          </ul>
-        </div>
+        
       </form>
+	  
+	  { /*<RenderedExpenses expenses={expenses} /> */ }
     </div>
+	</>
   );
 };
 
-export default ExpenceComponent;
+export default ExpenseComponent;

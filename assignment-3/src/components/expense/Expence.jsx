@@ -417,7 +417,7 @@ export default ExpenceComponent;
  */
 
 
-
+{/*
 import React, { useState, useRef } from "react";
 import styles from "./ExpenceComponent.module.css";
 
@@ -495,7 +495,7 @@ const ExpenceComponent = () => {
         <fieldset className={styles.contact_form_container}>
           <legend>Expense Tracker! ☁️</legend>
 
-          {/* Input fields remain the same... */}
+         
 
           <section className={styles.name_section}>
           <div className={styles.input_group}>
@@ -592,7 +592,7 @@ const ExpenceComponent = () => {
               <h3>{expense.title}</h3>
               <p>Amount: {expense.amount}</p>
               <p>Date: {expense.date}</p>
-              {/* Add more details here as needed */}
+             
             </li>
           ))}
         </ul>
@@ -605,3 +605,5 @@ const ExpenceComponent = () => {
 };
 
 export default ExpenceComponent;
+
+*/}
