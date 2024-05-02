@@ -23,74 +23,9 @@ const ExpenseComponent = ({renderExpensesFromLocalStorage}) => {
     messageError: "",
   });
 
-
   const [expenses, setExpenses] = useState([]);
 
   const textAreaElement = useRef(null);
-
-  useEffect(() => {
-    if (checkForNoErrors()) {
-      console.log("ok")
-      const newExpense = {
-        title: userData.expenseTitle,
-        amount: userData.expenseAmount,
-        date: userData.expenseDate,
-        phoneNumber: userData.phoneNumber,
-        subject: userData.subject,
-        message: userData.message,
-      };
-      setExpenses((prevExpenses) => [...prevExpenses, newExpense]);
-      localStorage.setItem(userData.expenseTitle, JSON.stringify(userData));
-      renderExpensesFromLocalStorage();
-      setUserData({
-        expenseTitle: "",
-        expenseAmount: "",
-        expenseDate: "",
-        phoneNumber: "",
-        subject: "",
-        message: "",
-      });
-    };
-  }, [errors]);
-
-  const resetErrors = () => {
-    const newState = {};
-    for(const key in errors){
-      newState[key] = "";
-    }
-    setErrors(newState);
-    console.log("reset")
-  }
-
-  const validateForm = () => {
-    setErrors((prevErrors) => {
-      // Validation logic remains the same...
-      const newErrors = { ...prevErrors };
-  
-      if (userData.expenseAmount === "") {
-        console.log("error");
-        newErrors.expenseAmountError = "Fill in amount";
-      }
-  
-      if (userData.expenseTitle === "") {
-        console.log("error");
-        newErrors.expenseTitleError = "Fill in title";
-      }
-  
-      if (!/^\d+$/.test(userData.phoneNumber)) {
-        console.log("error");
-        newErrors.phoneNumberError = "Only numbers";
-      }
-  
-      if (userData.message.length > 80) {
-        console.log("error");
-        newErrors.messageError = "Too long message";
-      }
-  
-      console.log("validated");
-      return newErrors;
-    });
-  };
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -99,23 +34,60 @@ const ExpenseComponent = ({renderExpensesFromLocalStorage}) => {
 
   };
 
-  const checkForNoErrors = () => {
-    console.log("check")
-    for (const key in errors) {
-      if (errors[key] !== "") {
-        return false;
-      }
-    }
-    return true;
-  };
-  
+  const generateEmptyErrors = () => ({
+    expenseTitleError: "",
+    expenseAmountError: "",
+    expenseDateError: "",
+    phoneNumberError: "",
+    subjectError: "",
+    messageError: "",
+  });
 
   const handleSubmit = (e) => {
+    console.log("clicked");
     e.preventDefault();
+    const newErrors = generateEmptyErrors();
 
-    validateForm();
-  };
+    if (userData.expenseAmount === "") {
+      console.log("empty");
+      newErrors.expenseAmountError = "Fill in amount";
+    }
   
+    if (userData.expenseTitle === "") {
+      newErrors.expenseTitleError = "Fill in title";
+    }
+  
+    if (!/^\d+$/.test(userData.phoneNumber)) {
+      newErrors.phoneNumberError = "Only numbers";
+    }
+  
+    if (userData.message.length > 80) {
+      newErrors.messageError = "Too long message";
+      
+    }
+    setErrors(newErrors);
+    console.log(newErrors)
+    if (Object.values(newErrors).every(error => error === "")) {
+      console.log("Form submitted successfully!");
+      const newExpense = { ...userData };
+      // Save to local storage
+      localStorage.setItem(userData.expenseTitle, JSON.stringify(newExpense));
+      // Clear form data
+      setUserData({
+        expenseTitle: "",
+        expenseAmount: "",
+        expenseDate: "",
+        phoneNumber: "",
+        subject: "",
+        message: "",
+        format: "housing",
+      });
+      renderExpensesFromLocalStorage();
+    } else {
+      console.log("error submit")
+      setErrors(newErrors);
+    }
+  };
 
   return (
 	<>
@@ -239,7 +211,7 @@ const ExpenseComponent = ({renderExpensesFromLocalStorage}) => {
             </div>
           </div>
 
-          <button className={styles.submit_button}>Submit</button>
+          <button className={styles.submit_button} onClick={handleSubmit}>Submit</button>
         </fieldset>
 
         
