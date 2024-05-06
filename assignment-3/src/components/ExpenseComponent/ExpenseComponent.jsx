@@ -50,19 +50,19 @@ const ExpenseComponent = ({renderExpensesFromLocalStorage}) => {
 
     if (userData.expenseAmount === "") {
       console.log("empty");
-      newErrors.expenseAmountError = "Fill in amount";
+      newErrors.expenseAmountError = "Fill in amount!";
     }
   
     if (userData.expenseTitle === "") {
-      newErrors.expenseTitleError = "Fill in title";
+      newErrors.expenseTitleError = "Fill in title!";
     }
   
     if (!/^\d+$/.test(userData.phoneNumber)) {
-      newErrors.phoneNumberError = "Only numbers";
+      newErrors.phoneNumberError = "Only numbers allowed!";
     }
   
     if (userData.message.length > 80) {
-      newErrors.messageError = "Too long message";
+      newErrors.messageError = "Max 80 characters allowed!";
       
     }
     setErrors(newErrors);
