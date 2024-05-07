@@ -26,7 +26,7 @@ function App() {
   return (
     <>
       <div className={styles.main_container}>
-        <h1>Expense Tracker!</h1>
+        <h1>Expense Tracker</h1>
         <div className={styles.main_components_container}>
           <ExpenseComponent
             renderExpensesFromLocalStorage={renderExpensesFromLocalStorage}
