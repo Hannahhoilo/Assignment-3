@@ -18,7 +18,7 @@ function App() {
     setExpenses(entries);
     console.log(expenses);
   };
-
+// useEffect()
   useEffect(() => {
     renderExpensesFromLocalStorage();
   }, []);
